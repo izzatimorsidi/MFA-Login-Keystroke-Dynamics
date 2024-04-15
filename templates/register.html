@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <h2>Register</h2>
+    <form method="post">
+        Username: <input type="text" name="username"><br>
+        Password: <input type="password" name="password"><br>
+        <p>Type 'This is a typing test' and press Enter:</p>
+        <input type="text" id="typingTest" autocomplete="off" autofocus><br>
+        <input type="hidden" name="t" id="timings">
+        <button type="submit">Register</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let t = []; //timings
+            let p1 = 0; //last press time
+
+            document.getElementById('typingTest').addEventListener('keydown', function(event) {
+                let pnew = Date.now(); //current time
+                if (p1 !== 0) {
+                    let duration = pnew - p1;
+                    t.push(duration);
+                }
+                p1 = pnew;
+            });
+
+            document.getElementById('typingTest').addEventListener('keyup', function(event) {
+                let p2 = Date.now(); //release time
+                let duration = p2 - p1;
+                t.push(duration);
+                p1 = p2;
+
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    if (t.length < 22) {
+                        alert('Please restart and make sure there is no typo');
+                        t = [];
+                        this.value = '';
+                    } else {
+                        document.getElementById('timings').value = t.join(',');
+                        this.form.submit();
+                    }
+                }
+            });
+        });
+    </script>
+ 
+</body>
+</html>
